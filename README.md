@@ -1,10 +1,10 @@
 # Bakalarka
-#here is the code for my bachelor thesis
+# here is the code for my bachelor thesis
 
 import pandas as pd
 from matplotlib import pyplot
 import numpy as np
-#prices wheat
+# prices wheat
 
 fname_prices = "/Users/kristian/bakalarka/MonthlyPrices.csv"
 data = pd.read_csv(fname_prices, ";")
@@ -17,7 +17,7 @@ df = df[["Wheat, US HRW"]]
 df_short = df.loc["1960-02-01":]
 print(df_short.head())
 
-#SPEI Wheat (change positives to negatives)
+# SPEI (change positives to negatives)
 
 fname_spei = "/Users/kristian/Desktop/bakalářka/data sucho/wheat (US great plains)  - 160.csv"
 wheat = pd.read_csv(fname_spei, ";")
@@ -35,8 +35,8 @@ pyplot.plot(wheat2)
 pyplot.plot(df_short)
 
 
-##relative changes
-#prices 
+## relative changes
+# prices 
 
 relative_changes = df_short.pct_change()
 relative_changes = relative_changes.dropna()
@@ -64,3 +64,24 @@ print('p-value: %f' % result[1])
 print('Critical Values:')
 for key, value in result[4].items():
     print('\t%s: %.3f' % (key, value))                   
+
+# OLS before filtering
+
+from sklearn.metrics import mean_squared_error, r2_score
+import statsmodels.api as sm
+
+wheat_ols = pd.concat([relative_changes, wheat2], axis = 1)
+wheat_ols = wheat_ols["1960-03-01":]
+print(wheat_ols)
+Y = wheat_ols["Wheat, US HRW"] 
+X = wheat_ols["SPEI_3"]
+
+model = sm.OLS(Y,X)
+results = model.fit()
+print(results.params)
+print(results.pvalues)
+rmse = np.sqrt(mean_squared_error(Y,X))
+r2 = r2_score(Y,X)
+print(rmse)
+print(r2)
+print(np.corrcoef(X,Y))
