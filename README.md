@@ -104,14 +104,14 @@ speiMA = (movingaverage_shorter(Y[1:],j) - movingaverage_longer(Y,j+1))
 
 speiMA1 = pd.DataFrame({"Wheat, US HRW": speiMA}, index = relative_changes.index[j:])
 priceMA1 = pd.DataFrame({"SPEI_3": priceMA}, index = relative_changes.index[j:])
-ols = pd.concat([priceMA1, speiMA1], axis = 1)
-ols
+ols_filter = pd.concat([priceMA1, speiMA1], axis = 1)
+ols_filter
 
 pyplot.plot(priceMA1)
 pyplot.plot(speiMA1)
 np.corrcoef(priceMA,speiMA)
 
-# 
+# OLS after filter
 
 YY = ols_filter["Wheat, US HRW"]
 XX = ols_filter["SPEI_3"]
