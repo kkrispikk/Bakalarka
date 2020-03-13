@@ -1,10 +1,10 @@
 # Bakalarka
-# here is the code for my bachelor thesis
 
 import pandas as pd
 from matplotlib import pyplot
 import numpy as np
-# prices wheat
+
+# Prices 
 
 fname_prices = "/Users/kristian/bakalarka/MonthlyPrices.csv"
 data = pd.read_csv(fname_prices, ";")
@@ -20,23 +20,23 @@ print(df_short.head())
 # SPEI (change positives to negatives)
 
 fname_spei = "/Users/kristian/Desktop/bakalářka/data sucho/wheat (US great plains)  - 160.csv"
-wheat = pd.read_csv(fname_spei, ";")
-wheat["DATA"] = pd.to_datetime(wheat["DATA"], format = "%b%Y")
-wheat_df = pd.DataFrame(wheat)
-wheat_df = wheat_df.set_index("DATA")
-wheat1 = wheat_df["SPEI_3"]
-wheat1 = wheat1.loc["1960-02-01":]
-wheat2 = np.array([-x for x in wheat1])
-wheat2 = pd.DataFrame({"SPEI_3": wheat2}, index = df_short.index)
+spei = pd.read_csv(fname_spei, ";")
+spei["DATA"] = pd.to_datetime(spei["DATA"], format = "%b%Y")
+spei_df = pd.DataFrame(spei)
+spei_df = spei_df.set_index("DATA")
+spei1 = spei_df["SPEI_3"]
+spei1 = spei1.loc["1960-02-01":]
+spei2 = np.array([-x for x in spei1])
+spei2 = pd.DataFrame({"SPEI_3": spei2}, index = df_short.index)
 
-print(wheat2.head())
-#np.corrcoef(df,wheat2)
-pyplot.plot(wheat2)
+print(spei2.head())
+#np.corrcoef(df,spei2)
+pyplot.plot(spei2)
 pyplot.plot(df_short)
 
 
-## relative changes
-# prices 
+# Relative changes
+## Prices 
 
 relative_changes = df_short.pct_change()
 relative_changes = relative_changes.dropna()
@@ -57,7 +57,7 @@ for key, value in result[4].items():
     
 # Dickey-Fuller test for non-staionarity: spei
 from statsmodels.tsa.stattools import adfuller
-X = wheat2.iloc[:,0].values
+X = spei2.iloc[:,0].values
 result = adfuller(X)
 print('ADF Statistic: %f' % result[0])
 print('p-value: %f' % result[1])
@@ -70,11 +70,11 @@ for key, value in result[4].items():
 from sklearn.metrics import mean_squared_error, r2_score
 import statsmodels.api as sm
 
-wheat_ols = pd.concat([relative_changes, wheat2], axis = 1)
-wheat_ols = wheat_ols["1960-03-01":]
-print(wheat_ols)
-Y = wheat_ols["Wheat, US HRW"] 
-X = wheat_ols["SPEI_3"]
+ols = pd.concat([relative_changes, spei2], axis = 1)
+ols = ols["1960-03-01":]
+print(ols)
+Y = ols["Wheat, US HRW"] 
+X = ols["SPEI_3"]
 
 model = sm.OLS(Y,X)
 results = model.fit()
@@ -86,7 +86,7 @@ print(rmse)
 print(r2)
 print(np.corrcoef(X,Y))
 
-# filter
+# Filter
 j = 5
 
 def movingaverage_shorter (values, window):
@@ -104,9 +104,24 @@ speiMA = (movingaverage_shorter(Y[1:],j) - movingaverage_longer(Y,j+1))
 
 speiMA1 = pd.DataFrame({"Wheat, US HRW": speiMA}, index = relative_changes.index[j:])
 priceMA1 = pd.DataFrame({"SPEI_3": priceMA}, index = relative_changes.index[j:])
-wheat_ols = pd.concat([priceMA1, speiMA1], axis = 1)
-wheat_ols
+ols = pd.concat([priceMA1, speiMA1], axis = 1)
+ols
 
 pyplot.plot(priceMA1)
 pyplot.plot(speiMA1)
 np.corrcoef(priceMA,speiMA)
+
+# 
+
+YY = ols_filter["Wheat, US HRW"]
+XX = ols_filter["SPEI_3"]
+
+model = sm.OLS(YY,XX)
+results = model.fit()
+print(results.params)
+print(results.pvalues)
+rmse = np.sqrt(mean_squared_error(YY,XX))
+r2 = r2_score(YY,XX)
+print(rmse)
+print(r2)
+print(np.corrcoef(XX,YY))
