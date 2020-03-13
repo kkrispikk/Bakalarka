@@ -44,3 +44,23 @@ relative_changes = pd.DataFrame(relative_changes)
 relative_changes = relative_changes *30
 pyplot.plot(relative_changes)
 print(relative_changes)
+
+# Dickey-Fuller test for non-staionarity:prices
+from statsmodels.tsa.stattools import adfuller
+X = relative_changes.iloc[:,0].values
+result = adfuller(X)
+print('ADF Statistic: %f' % result[0])
+print('p-value: %f' % result[1])
+print('Critical Values:')
+for key, value in result[4].items():
+    print('\t%s: %.3f' % (key, value))
+    
+# Dickey-Fuller test for non-staionarity: spei
+from statsmodels.tsa.stattools import adfuller
+X = wheat2.iloc[:,0].values
+result = adfuller(X)
+print('ADF Statistic: %f' % result[0])
+print('p-value: %f' % result[1])
+print('Critical Values:')
+for key, value in result[4].items():
+    print('\t%s: %.3f' % (key, value))                   
