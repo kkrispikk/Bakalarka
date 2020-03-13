@@ -10,12 +10,12 @@ fname_prices = "/Users/kristian/bakalarka/MonthlyPrices.csv"
 data = pd.read_csv(fname_prices, ";")
 
 data["date"] = pd.to_datetime(data["date"], format = "%YM%m")
-df = pd.DataFrame(data)
-df = df.set_index("date")
-df.index.name = "Month"
-df = df[["Wheat, US HRW"]]
-df_short = df.loc["1960-02-01":]
-print(df_short.head())
+prices = pd.DataFrame(data)
+prices = prices.set_index("date")
+prices.index.name = "Month"
+prices = prices[["Wheat, US HRW"]]
+prices = prices.loc["1960-02-01":]
+print(prices_short.head())
 
 # SPEI (change positives to negatives)
 
@@ -27,18 +27,18 @@ spei_df = spei_df.set_index("DATA")
 spei1 = spei_df["SPEI_3"]
 spei1 = spei1.loc["1960-02-01":]
 spei2 = np.array([-x for x in spei1])
-spei2 = pd.DataFrame({"SPEI_3": spei2}, index = df_short.index)
+spei2 = pd.DataFrame({"SPEI_3": spei2}, index = prices_short.index)
 
 print(spei2.head())
-#np.corrcoef(df,spei2)
+#np.corrcoef(prices,spei2)
 pyplot.plot(spei2)
-pyplot.plot(df_short)
+pyplot.plot(prices_short)
 
 
 # Relative changes
 ## Prices 
 
-relative_changes = df_short.pct_change()
+relative_changes = prices_short.pct_change()
 relative_changes = relative_changes.dropna()
 relative_changes = pd.DataFrame(relative_changes)
 relative_changes = relative_changes *100
