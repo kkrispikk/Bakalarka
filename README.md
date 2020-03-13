@@ -41,7 +41,7 @@ pyplot.plot(df_short)
 relative_changes = df_short.pct_change()
 relative_changes = relative_changes.dropna()
 relative_changes = pd.DataFrame(relative_changes)
-relative_changes = relative_changes *30
+relative_changes = relative_changes *100
 pyplot.plot(relative_changes)
 print(relative_changes)
 
