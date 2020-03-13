@@ -33,3 +33,14 @@ print(wheat2.head())
 #np.corrcoef(df,wheat2)
 pyplot.plot(wheat2)
 pyplot.plot(df_short)
+
+
+##relative changes
+#prices 
+
+relative_changes = df_short.pct_change()
+relative_changes = relative_changes.dropna()
+relative_changes = pd.DataFrame(relative_changes)
+relative_changes = relative_changes *30
+pyplot.plot(relative_changes)
+print(relative_changes)
