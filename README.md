@@ -1,5 +1,5 @@
 # Bakalarka
-here is the code for my bachelor thesis
+#here is the code for my bachelor thesis
 
 import pandas as pd
 from matplotlib import pyplot
