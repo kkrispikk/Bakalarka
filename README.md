@@ -85,3 +85,28 @@ r2 = r2_score(Y,X)
 print(rmse)
 print(r2)
 print(np.corrcoef(X,Y))
+
+# filter
+j = 5
+
+def movingaverage_shorter (values, window):
+    weights = np.repeat(1.0, window)/2**(j-1)
+    sma = np.convolve(values, weights, 'valid')
+    return sma
+
+def movingaverage_longer (values, window):
+    weights = np.repeat(1.0, window)/2**(j)
+    sma = np.convolve(values, weights, 'valid')
+    return sma
+
+priceMA = movingaverage_shorter(X[1:],j) - movingaverage_longer(X,j+1)
+speiMA = (movingaverage_shorter(Y[1:],j) - movingaverage_longer(Y,j+1))
+
+speiMA1 = pd.DataFrame({"Wheat, US HRW": speiMA}, index = relative_changes.index[j:])
+priceMA1 = pd.DataFrame({"SPEI_3": priceMA}, index = relative_changes.index[j:])
+wheat_ols = pd.concat([priceMA1, speiMA1], axis = 1)
+wheat_ols
+
+pyplot.plot(priceMA1)
+pyplot.plot(speiMA1)
+np.corrcoef(priceMA,speiMA)
