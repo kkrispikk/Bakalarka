@@ -46,7 +46,6 @@ pyplot.plot(relative_changes)
 print(relative_changes)
 
 # Dickey-Fuller test for non-staionarity:prices
-from statsmodels.tsa.stattools import adfuller
 X = relative_changes.iloc[:,0].values
 result = adfuller(X)
 print('ADF Statistic: %f' % result[0])
