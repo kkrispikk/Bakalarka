@@ -89,20 +89,20 @@ print(np.corrcoef(X,Y))
 j = 5
 
 def movingaverage_shorter (values, window):
-    weights = np.repeat(1.0, window)/2**(j-1)
+    weights = np.repeat(1.0, window)/(window)
     sma = np.convolve(values, weights, 'valid')
     return sma
 
 def movingaverage_longer (values, window):
-    weights = np.repeat(1.0, window)/2**(j)
+    weights = np.repeat(1.0, window)/window
     sma = np.convolve(values, weights, 'valid')
     return sma
 
-priceMA = movingaverage_shorter(X[1:],j) - movingaverage_longer(X,j+1)
-speiMA = (movingaverage_shorter(Y[1:],j) - movingaverage_longer(Y,j+1))
+priceMA = movingaverage_shorter(X[2**(j):],2**j) - movingaverage_longer(X,2**(j+1))
+speiMA = movingaverage_shorter(Y[2**(j):],2**j) - movingaverage_longer(Y,2**(j+1))
 
-speiMA1 = pd.DataFrame({"Wheat, US HRW": speiMA}, index = relative_changes.index[j:])
-priceMA1 = pd.DataFrame({"SPEI_3": priceMA}, index = relative_changes.index[j:])
+speiMA1 = pd.DataFrame({"Rice, Thai 5%": speiMA}, index = relative_changes.index[2**(j+1)-1:])
+priceMA1 = pd.DataFrame({"SPEI_3": priceMA}, index = relative_changes.index[2**(j+1)-1:])
 ols_filter = pd.concat([priceMA1, speiMA1], axis = 1)
 ols_filter
 
