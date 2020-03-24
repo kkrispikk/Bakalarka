@@ -117,10 +117,4 @@ XX = ols_filter["SPEI_3"]
 
 model = sm.OLS(YY,XX)
 results = model.fit()
-print(results.params)
-print(results.pvalues)
-rmse = np.sqrt(mean_squared_error(YY,XX))
-r2 = r2_score(YY,XX)
-print(rmse)
-print(r2)
-print(np.corrcoef(XX,YY))
+results.summary(
