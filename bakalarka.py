@@ -77,13 +77,8 @@ X = ols["SPEI_3"]
 
 model = sm.OLS(Y,X)
 results = model.fit()
-print(results.params)
-print(results.pvalues)
-rmse = np.sqrt(mean_squared_error(Y,X))
-r2 = r2_score(Y,X)
-print(rmse)
-print(r2)
 print(np.corrcoef(X,Y))
+results.summary()
 
 # Filter
 j = 5
@@ -117,4 +112,4 @@ XX = ols_filter["SPEI_3"]
 
 model = sm.OLS(YY,XX)
 results = model.fit()
-results.summary(
+results.summary()
