@@ -96,8 +96,8 @@ def movingaverage_longer (values, window):
 priceMA = movingaverage_shorter(X[2**(j):],2**j) - movingaverage_longer(X,2**(j+1))
 speiMA = movingaverage_shorter(Y[2**(j):],2**j) - movingaverage_longer(Y,2**(j+1))
 
-speiMA1 = pd.DataFrame({"Rice, Thai 5%": speiMA}, index = relative_changes.index[2**(j+1)-1:])
-priceMA1 = pd.DataFrame({"SPEI_3": priceMA}, index = relative_changes.index[2**(j+1)-1:])
+speiMA1 = pd.DataFrame({"SPEI_3": speiMA}, index = relative_changes.index[2**(j+1)-1:])
+priceMA1 = pd.DataFrame({"Rice, Thai 5%": priceMA}, index = relative_changes.index[2**(j+1)-1:])
 ols_filter = pd.concat([priceMA1, speiMA1], axis = 1)
 ols_filter
 
